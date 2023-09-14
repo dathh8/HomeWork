@@ -1,0 +1,35 @@
+<?php
+/**
+ * @var \Dev\CountryTime\Block\CountryTime $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$listCountry = $block->getListCountry();
+?>
+<div class="country-time-wrapper">
+    <select class="select-country">
+        <?php foreach ($listCountry as $key => $country): ?>
+        <option value="<?= $key ?>"><?= __($country) ?></option>
+        <?php endforeach; ?>
+    </select><br>
+    <h2 class="time" id ="time"><?= __('Time') ?></h2>
+</div>
+<script>
+    require(['jquery'], function ($) {
+        $('.country-time-wrapper .select-country').change(function (e) {
+            let data = {
+                country: $(this).val(),
+        };
+            $.ajax({
+                url: '<?= $block->getSyncTimeUrl() ?>',
+                type: 'GET',
+                data: data,
+                showLoader: true
+            }).done(function (response) {
+                document.getElementById("time").innerHTML = response;
+            });
+        });
+    });
+</script>
+
+
